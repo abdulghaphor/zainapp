@@ -1,32 +1,21 @@
-import { useEffect, useState } from "react";
+import { observer } from "mobx-react";
 import { Container, Button, Col, Row } from "react-bootstrap";
-import falafel from "./movies";
+import movieStore from "./movieStore";
 function App() {
-  const [watchList, setWatchList] = useState(
-    falafel.map((cv) => ({ ...cv, status: false }))
-  );
-  const switchFn = (id) => {
-    setWatchList(
-      watchList.map((shawerma) =>
-        shawerma.id === id
-          ? { ...shawerma, status: !shawerma.status }
-          : shawerma
-      )
-    );
-  };
-
   return (
     <Container>
       <Row>
         <Col>
           <h1>Watch List</h1>
-          {watchList
+          {movieStore.movies
             .filter((cv) => cv.status === false)
             .map((cv) => (
               <Row style={{ marginBottom: "5px" }}>
                 <Col>{cv.name}</Col>
                 <Col>
-                  <Button onClick={() => switchFn(cv.id)}>Watched</Button>
+                  <Button onClick={() => movieStore.switchFn(cv.id)}>
+                    Watched
+                  </Button>
                 </Col>
               </Row>
             ))}
@@ -34,13 +23,15 @@ function App() {
 
         <Col>
           <h1>Watched</h1>
-          {watchList
+          {movieStore.movies
             .filter((cv) => cv.status === true)
             .map((cv) => (
               <Row style={{ marginBottom: "5px" }}>
                 <Col>{cv.name}</Col>
                 <Col>
-                  <Button onClick={() => switchFn(cv.id)}>Unwatch</Button>
+                  <Button onClick={() => movieStore.switchFn(cv.id)}>
+                    Unwatch
+                  </Button>
                 </Col>
               </Row>
             ))}
@@ -50,4 +41,4 @@ function App() {
   );
 }
 
-export default App;
+export default observer(App);
